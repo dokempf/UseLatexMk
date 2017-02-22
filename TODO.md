@@ -9,3 +9,4 @@ Things that need to be done:
 * Move documentation from README to UseLatexMk.cmake
 * Add a testing suite to the project (even CI?)
 * Do some research on what needs to be done on non-Unices
+* Switch from latexmk parameter orgy to using configure_file on a configfile template (latexmk -r)
