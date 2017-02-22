@@ -45,9 +45,9 @@ find_package(LatexMk)
 
 function(add_latex_document)
   # Parse the input parameters to the function
-  set(OPTION REQUIRED)
+  set(OPTION REQUIRED EXCLUDE_FROM_ALL)
   set(SINGLE SOURCE TARGET)
-  set(MULTI)
+  set(MULTI FATHER_TARGET)
   include(CMakeParseArguments)
   cmake_parse_arguments(LMK "${OPTION}" "${SINGLE}" "${MULTI}" ${ARGN})
 
@@ -63,9 +63,11 @@ function(add_latex_document)
     # Construct a nice target name from the source file
     get_filename_component(LMK_TARGET ${LMK_SOURCE} ABSOLUTE)
     file(RELATIVE_PATH LMK_TARGET ${CMAKE_SOURCE_DIR} ${LMK_TARGET})
-#     get_filename_component(LMK_TARGET ${LMK_TARGET} DIRECTORY)
     string(REPLACE "/" "_" LMK_TARGET ${LMK_TARGET})
     string(REPLACE "." "_" LMK_TARGET ${LMK_TARGET})
+  endif()
+  if(LMK_FATHER_TARGET)
+    set(LMK_EXCLUDE_FROM_ALL TRUE)
   endif()
 
   # Check the existence of the latexmk executable and skip/fail if not present
@@ -77,8 +79,16 @@ function(add_latex_document)
     endif()
   endif()
 
+  # Inspect the EXCLUDE_FROM_ALL option
+  if(LMK_EXCLUDE_FROM_ALL)
+    set(ALL_OPTION "")
+  else()
+    set(ALL_OPTION "ALL")
+  endif()
+
   # Call the latexmk executable
   add_custom_target(${LMK_TARGET}
+                    ${ALL_OPTION}
                     COMMAND ${LATEXMK_EXECUTABLE}
                             -pdflatex=\"${PDFLATEX_COMPILER} -shell-escape -interaction=nonstopmode %O %S\"
                             -pdf
@@ -86,4 +96,12 @@ function(add_latex_document)
                             ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     )
+
+  # Add dependencies to father targets
+  foreach(father ${LMK_FATHER_TARGET})
+    if(NOT TARGET ${father})
+      message(FATAL_ERROR "The target given to add_latex_documents FATHER_TARGET parameter does not exist")
+    endif()
+    add_dependencies(${father} ${LMK_TARGET})
+  endforeach()
 endfunction()
