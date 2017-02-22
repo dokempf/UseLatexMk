@@ -1,13 +1,32 @@
 # UseLatexMk.cmake is a CMake module to build Latex documents
 # from CMake.
 #
-# To use this project, just copy the cmake modules (*.cmake) from this
-# project into your project and use the functions documented below.
-# Please also make sure to maintain below license agreement when copying.
+# add_latex_document(SOURCE texsource
+#                    [TARGET target]
+#                    [EXCLUDE_FROM_ALL]
+#                    [REQUIRED]
+#                    [FATHER_TARGET father1 [father2 ...]]
+#                    )
 #
-# For any further informations visit https://github.com/dokempf/UseLatexMk
+# The arguments:
+# SOURCE
+#   Required argument with a single tex source that defines the document to be built
+# TARGET
+#   An optional target name, defaults to a suitable mangling of the given source and its path.
+# EXCLUDE_FROM_ALL
+#   Set this to avoid the target from being built by default. If the FATHER_TARGET
+#   parameter is set, this option is automatically set.
+# REQUIRED
+#   Set this option to issue a fatal error if the document could not
+#   be built. By default it is only skipped.
+# FATHER_TARGET
+#   A list of meta-targets that should trigger a rebuild of this target (like "make doc").
+#   The targets are expected to exist already. Specifying any such targets will automatically add the
+#   above EXCLUDE_FROM_ALL option.
 #
-# For usability instructions see README.md.
+#
+# For further informations, visit https://github.com/dokempf/UseLatexMk
+#
 #
 # Copyright (c) 2017, Dominic Kempf, Steffen Müthing
 #

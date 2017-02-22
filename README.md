@@ -26,27 +26,9 @@ Now, you are ready to use it!
 
 # How do I use it?
 
-Just use the following CMake function from anywhere in your project:
+Just use the following CMake function `add_latex_document` from anywhere in your project.
+For an explanation of parameters, check `UseLatexMk.cmake`.
 
-```
-add_latex_document(SOURCE texsource
-                   [TARGET target]
-                   [EXCLUDE_FROM_ALL]
-                   [REQUIRED]
-                   [FATHER_TARGET father1 [father2 ...]]
-                   )
-```
-
-The arguments:
-* `SOURCE`: Required argument with a single tex source that defines the document to be built
-* `TARGET`: An optional target name, defaults to a suitable mangling of the given source and its path.
-* `EXCLUDE_FROM_ALL`: Set this to avoid the target from being built by default. If the FATHER_TARGET
-  parameter is set, this option is automatically set.
-* `REQUIRED`: Set this option to issue a fatal error if the document could not
-  be built. By default it is only skipped.
-* `FATHER_TARGET`: A list of meta-targets that should trigger a rebuild of this target (like `make doc`).
-  The targets are expected to exist already. Specifying any such targets will automatically add the
-  above EXCLUDE_FROM_ALL option.
 
 # License
 
