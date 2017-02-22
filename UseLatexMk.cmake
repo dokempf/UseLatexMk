@@ -62,6 +62,10 @@
 find_package(LATEX)
 find_package(LatexMk)
 
+# Store the path to the latexmkrc template
+set(LATEXMKRC_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/latexmkrc.cmake
+    CACHE FILEPATH "The template to use for latexmkrc files")
+
 function(add_latex_document)
   # Parse the input parameters to the function
   set(OPTION REQUIRED EXCLUDE_FROM_ALL)
@@ -105,14 +109,14 @@ function(add_latex_document)
     set(ALL_OPTION "ALL")
   endif()
 
+  # Generate a latexmkrc file for this project
+  set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}.latexmkrc"
+  configure_file(${LATEXMKRC_TEMPLATE} ${LATEXMKRC_FILE} @ONLY)
+
   # Call the latexmk executable
   add_custom_target(${LMK_TARGET}
                     ${ALL_OPTION}
-                    COMMAND ${LATEXMK_EXECUTABLE}
-                            -pdflatex=\"${PDFLATEX_COMPILER} -shell-escape -interaction=nonstopmode %O %S\"
-                            -pdf
-                            -outdir=\"${CMAKE_CURRENT_BINARY_DIR}\"
-                            ${LMK_SOURCE}
+                    COMMAND ${LATEXMK_EXECUTABLE} -r ${LATEXMKRC_FILE} ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Building PDF from ${LMK_SOURCE}..."
                     )
