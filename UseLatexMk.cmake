@@ -95,6 +95,7 @@ function(add_latex_document)
                             -outdir=\"${CMAKE_CURRENT_BINARY_DIR}\"
                             ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+                    COMMENT "Building PDF from ${LMK_SOURCE}..."
                     )
 
   # Add dependencies to father targets
