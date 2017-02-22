@@ -20,7 +20,7 @@
 # LATEXMK_VERSION_MINOR
 #   The minor version of the latexmk executable
 #
-# Copyright (c) 2017, Dominic Kempf
+# Copyright (c) 2017, Dominic Kempf, Steffen Müthing
 #
 # All rights reserved.
 #

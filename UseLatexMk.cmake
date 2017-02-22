@@ -9,7 +9,7 @@
 #
 # For usability instructions see README.md.
 #
-# Copyright (c) 2017, Dominic Kempf
+# Copyright (c) 2017, Dominic Kempf, Steffen Müthing
 #
 # All rights reserved.
 #
