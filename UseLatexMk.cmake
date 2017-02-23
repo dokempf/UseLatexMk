@@ -93,9 +93,15 @@
 find_package(LATEX)
 find_package(LatexMk)
 
-# Store the path to the latexmkrc template
-set(LATEXMKRC_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/latexmkrc.cmake
-    CACHE FILEPATH "The template to use for latexmkrc files")
+# Find the latexmkrc template file shipped alongside UseLatexMk.cmake
+find_file(LATEXMKRC_TEMPLATE
+          latexmkrc.cmake
+          HINTS ${CMAKE_MODULE_PATH}
+                ${CMAKE_CURRENT_SOURCE_DIR}
+                ${CMAKE_SOURCE_DIR}
+                ${CMAKE_SOURCE_DIR}/cmake
+                ${CMAKE_SOURCE_DIR}/cmake/modules
+          )
 
 function(add_latex_document)
   # Parse the input parameters to the function
@@ -141,6 +147,9 @@ function(add_latex_document)
   endif()
 
   # Generate a latexmkrc file for this project
+  if(NOT LATEXMKRC_TEMPLATE)
+    message("Fatal error: The latexmkrc template file could not be found. Consider adding its path to CMAKE_MODULE_PATH")
+  endif()
   set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}.latexmkrc")
   configure_file(${LATEXMKRC_TEMPLATE} ${LATEXMKRC_FILE} @ONLY)
   set(LATEXMKRC_OPTIONS -r ${LATEXMKRC_FILE})
