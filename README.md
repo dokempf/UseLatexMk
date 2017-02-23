@@ -3,7 +3,7 @@
 UseLatexMk is a cmake tool to build Latex documents from cmake projects.
 
 Instead of doing the tedious work of implementing all the logic on how to
-build Latex files in the CMake language (like the better known UseLATEX.cmake
+build Latex files in the CMake language (like the better known [UseLATEX](https://github.com/kmorel/UseLATEX)
 does), it uses the LatexMk tool found on the system. As a result, there are
 some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
 * Additional input files, like e.g. code listing, do not have to be
@@ -12,8 +12,8 @@ some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
 * The generation procedure is more robust, because
   it relies on an upstream tool with a wider userbase.
 * Additional (sophisticated) build logic can be provided to latexmkrc
-  through configuration files. Note, you need to do this to build non-PDF
-  documents.
+  through configuration files without touching the CMake code. Note,
+  you need to do this to build non-PDF documents.
 
 **Please note the following security restriction**:
 
