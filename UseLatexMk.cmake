@@ -6,6 +6,7 @@
 #                    [EXCLUDE_FROM_ALL]
 #                    [REQUIRED]
 #                    [FATHER_TARGET father1 [father2 ...]]
+#                    [RCFILE rcfile1 [rcfile2 ...]]
 #                    )
 #
 # The arguments:
@@ -23,7 +24,14 @@
 #   A list of meta-targets that should trigger a rebuild of this target (like "make doc").
 #   The targets are expected to exist already. Specifying any such targets will automatically add the
 #   above EXCLUDE_FROM_ALL option.
-#
+# RCFILE
+#   A list configuration file to customize the latexmk build process. These are read by latexmk
+#   *after* the automatically generated rc file in the indicated order. Note that latexmk rcfiles
+#   override any previous settings.
+#   You may also use CMake variables within @'s (like @CMAKE_CURRENT_BINARY_DIR@) and have
+#   them replaced with the matching CMake variables (see cmake's configure_file command).
+#   Note, that this is a powerful, but advanced feature. For details on what can be achieved
+#   see the latexmk manual.
 #
 # For further informations, visit https://github.com/dokempf/UseLatexMk
 #
@@ -70,7 +78,7 @@ function(add_latex_document)
   # Parse the input parameters to the function
   set(OPTION REQUIRED EXCLUDE_FROM_ALL)
   set(SINGLE SOURCE TARGET)
-  set(MULTI FATHER_TARGET)
+  set(MULTI FATHER_TARGET RCFILE)
   include(CMakeParseArguments)
   cmake_parse_arguments(LMK "${OPTION}" "${SINGLE}" "${MULTI}" ${ARGN})
 
@@ -112,11 +120,20 @@ function(add_latex_document)
   # Generate a latexmkrc file for this project
   set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}.latexmkrc"
   configure_file(${LATEXMKRC_TEMPLATE} ${LATEXMKRC_FILE} @ONLY)
+  set(LATEXMKRC_OPTIONS -r ${LATEXMKRC_FILE})
+
+  # Process additional latexmkrc files
+  foreach(rcfile ${LMK_RCFILE})
+    get_filename_component(rcfile_base ${rcfile} NAME)
+    set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}_${rcfile_base}")
+    configure_file(${rcfile} ${LATEXMKRC_FILE} @ONLY)
+    set(LATEXMKRC_OPTIONS ${LATEXMKRC_OPTIONS} -r ${LATEXMKRC_FILE})
+  endforeach()
 
   # Call the latexmk executable
   add_custom_target(${LMK_TARGET}
                     ${ALL_OPTION}
-                    COMMAND ${LATEXMK_EXECUTABLE} -r ${LATEXMKRC_FILE} ${LMK_SOURCE}
+                    COMMAND ${LATEXMK_EXECUTABLE} ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Building PDF from ${LMK_SOURCE}..."
                     )

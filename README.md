@@ -11,10 +11,9 @@ some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
   of cmake.
 * The generation procedure is more robust, because
   it relies on an upstream tool with a wider userbase.
-
-There are currently some limitations to UseLatexMK:
-* We intentionally restrict ourselves to building PDFs, as we believe
-  that this covers 99% of todays use cases.
+* Additional (sophisticated) build logic can be provided to latexmkrc
+  through configuration files. Note, you need to do this to build non-PDF
+  documents.
 
 # What is needed to use UseLatexMk from my project?
 
