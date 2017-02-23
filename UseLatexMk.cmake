@@ -141,7 +141,7 @@ function(add_latex_document)
   endif()
 
   # Generate a latexmkrc file for this project
-  set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}.latexmkrc"
+  set(LATEXMKRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LMK_TARGET}.latexmkrc")
   configure_file(${LATEXMKRC_TEMPLATE} ${LATEXMKRC_FILE} @ONLY)
   set(LATEXMKRC_OPTIONS -r ${LATEXMKRC_FILE})
 
