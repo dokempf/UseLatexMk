@@ -15,6 +15,13 @@ some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
   through configuration files. Note, you need to do this to build non-PDF
   documents.
 
+**Please note the following security restriction**:
+
+UseLatexMk relies on latexmk separating input and output directory correctly.
+This includes using an absolute path for the output directory. On some TeX
+systems this requires the disabling of a security measure by setting `openout_any = a`.
+See UseLatexMk.cmake for additional information on the matter.
+
 # What is needed to use UseLatexMk from my project?
 
 You just need to

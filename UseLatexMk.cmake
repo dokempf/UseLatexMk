@@ -33,6 +33,29 @@
 #   Note, that this is a powerful, but advanced feature. For details on what can be achieved
 #   see the latexmk manual.
 #
+# Please note the following security restriction:
+#
+# UseLatexMk relies on latexmk separating input and output directory correctly.
+# This includes using an absolute path for the output directory. On some TeX
+# systems this requires the disabling of a security measure by setting `openout_any = a`.
+# From the latexmk documentation:
+#
+# Commonly, the directory specified for output files is a subdirectory of the current working direc-
+# tory. However, if you specify some other directory, e.g., "/tmp/foo" or "../output", be aware that
+# this could cause problems, e.g., with makeindex or bibtex. This is because modern versions of
+# these programs, by default, will refuse to work when they find that they are asked to write to a file
+# in a directory that appears not to be the current working directory or one of its subdirectories. This
+# is part of security measures by the whole TeX system that try to prevent malicious or errant TeX
+# documents from incorrectly messing with a user’s files. If for $out_dir or $aux_dir you really do
+# need to specify an absolute pathname (e.g., "/tmp/foo") or a path (e.g., "../output") that includes a
+# higher-level directory, and you need to use makeindex or bibtex, then you need to disable the secu-
+# rity measures (and assume any risks). One way of doing this is to temporarily set an operating
+# system environment variable openout_any to "a" (as in "all"), to override the default "paranoid"
+# setting.
+#
+# UseLatexMk.cmake allows to reenable the TeX security measure by setting LATEXMK_PARANOID to TRUE
+# through cmake -D, but it is not guaranteed to work correctly in that case.
+#
 # For further informations, visit https://github.com/dokempf/UseLatexMk
 #
 #
@@ -136,6 +159,11 @@ function(add_latex_document)
     # Determine output PDF
     get_filename_component(output ${LMK_SOURCE} NAME_WE)
     set(BYPRODUCTS_PARAMETER BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
+  endif()
+
+  # Maybe allow latexmk the use of absolute paths
+  if(NOT LATEXMK_PARANOID)
+    set($ENV{openout_any} "a")
   endif()
 
   # Call the latexmk executable
