@@ -130,12 +130,21 @@ function(add_latex_document)
     set(LATEXMKRC_OPTIONS ${LATEXMKRC_OPTIONS} -r ${LATEXMKRC_FILE})
   endforeach()
 
+  # Add the BYPRODUCTS parameter, if the CMake version supports it
+  set(BYPRODUCTS_PARAMETER "")
+  if (CMAKE_VERSION VERSION_GREATER "3.2")
+    # Determine output PDF
+    get_filename_component(output ${LMK_SOURCE} NAME_WE)
+    set(BYPRODUCTS_PARAMETER BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
+  endif()
+
   # Call the latexmk executable
   add_custom_target(${LMK_TARGET}
                     ${ALL_OPTION}
                     COMMAND ${LATEXMK_EXECUTABLE} ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Building PDF from ${LMK_SOURCE}..."
+                    ${BYPRODUCTS_PARAMETER}
                     )
 
   # Add dependencies to father targets
