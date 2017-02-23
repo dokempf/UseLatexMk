@@ -176,6 +176,9 @@ function(add_latex_document)
   endif()
 
   # Call the latexmk executable
+  # NB: Using add_custom_target here results in the target always being outofdate.
+  #     This offloads the dependency tracking from cmake to latexmk. This is an
+  #     intentional decision of UseLatexMk to avoid listing dependencies of the tex source.
   add_custom_target(${LMK_TARGET}
                     ${ALL_OPTION}
                     COMMAND ${LATEXMK_EXECUTABLE} ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
