@@ -7,6 +7,8 @@
 #                    [REQUIRED]
 #                    [FATHER_TARGET father1 [father2 ...]]
 #                    [RCFILE rcfile1 [rcfile2 ...]]
+#                    [INSTALL destination]
+#                    [BUILD_ON_INSTALL]
 #                    )
 #
 # The arguments:
@@ -31,7 +33,12 @@
 #   You may also use CMake variables within @'s (like @CMAKE_CURRENT_BINARY_DIR@) and have
 #   them replaced with the matching CMake variables (see cmake's configure_file command).
 #   Note, that this is a powerful, but advanced feature. For details on what can be achieved
-#   see the latexmk manual.
+#   see the latexmk manual. Note, that triggering non-PDF builds through latexmkrc files might
+#   cause problems with other features of UseLatexMk.
+# INSTALL
+#   Set this option to an install directory to create an installation rule for this document.
+# BUILD_ON_INSTALL
+#   Set this option, if you want to trigger a build of this document during installation.
 #
 # Please note the following security restriction:
 #
@@ -105,8 +112,8 @@ find_file(LATEXMKRC_TEMPLATE
 
 function(add_latex_document)
   # Parse the input parameters to the function
-  set(OPTION REQUIRED EXCLUDE_FROM_ALL)
-  set(SINGLE SOURCE TARGET)
+  set(OPTION REQUIRED EXCLUDE_FROM_ALL BUILD_ON_INSTALL)
+  set(SINGLE SOURCE TARGET INSTALL)
   set(MULTI FATHER_TARGET RCFILE)
   include(CMakeParseArguments)
   cmake_parse_arguments(LMK "${OPTION}" "${SINGLE}" "${MULTI}" ${ARGN})
@@ -129,6 +136,9 @@ function(add_latex_document)
   if(LMK_FATHER_TARGET)
     set(LMK_EXCLUDE_FROM_ALL TRUE)
   endif()
+  if(LMK_BUILD_ON_INSTALL AND (NOT LMK_INSTALL))
+    message(WARNING "Specified to build on installation, but not installing!")
+  endif()
 
   # Check the existence of the latexmk executable and skip/fail if not present
   if(NOT (LATEXMK_FOUND AND PDFLATEX_COMPILER))
@@ -138,6 +148,10 @@ function(add_latex_document)
       return()
     endif()
   endif()
+
+  # Determine the output name
+  get_filename_component(output ${LMK_SOURCE} NAME_WE)
+  set(OUTPUT_PDF ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
 
   # Inspect the EXCLUDE_FROM_ALL option
   if(LMK_EXCLUDE_FROM_ALL)
@@ -165,9 +179,7 @@ function(add_latex_document)
   # Add the BYPRODUCTS parameter, if the CMake version supports it
   set(BYPRODUCTS_PARAMETER "")
   if (CMAKE_VERSION VERSION_GREATER "3.2")
-    # Determine output PDF
-    get_filename_component(output ${LMK_SOURCE} NAME_WE)
-    set(BYPRODUCTS_PARAMETER BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
+    set(BYPRODUCTS_PARAMETER BYPRODUCTS ${OUTPUT_PDF})
   endif()
 
   # Maybe allow latexmk the use of absolute paths
@@ -194,4 +206,12 @@ function(add_latex_document)
     endif()
     add_dependencies(${father} ${LMK_TARGET})
   endforeach()
+
+  # Add installation rules
+  if(LMK_BUILD_ON_INSTALL)
+    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target ${LMK_TARGET} --config $<CONFIGURATION>)")
+  endif()
+  if(LMK_INSTALL)
+    install(FILES ${OUTPUT_PDF} DESTINATION ${LMK_INSTALL})
+  endif()
 endfunction()
