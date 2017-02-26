@@ -110,6 +110,8 @@ find_file(LATEXMKRC_TEMPLATE
                 ${CMAKE_SOURCE_DIR}/cmake/modules
           )
 
+set(LATEXMK_SOURCES_BUILD_FROM)
+
 function(add_latex_document)
   # Parse the input parameters to the function
   set(OPTION REQUIRED EXCLUDE_FROM_ALL BUILD_ON_INSTALL)
@@ -138,6 +140,16 @@ function(add_latex_document)
   endif()
   if(LMK_BUILD_ON_INSTALL AND (NOT LMK_INSTALL))
     message(WARNING "Specified to build on installation, but not installing!")
+  endif()
+
+  # Verify that each source is used exactly once
+  set(ABS_SOURCE ${LMK_SOURCE})
+  if(NOT IS_ABSOLUTE ${ABS_SOURCE})
+    get_filename_component(ABS_SOURCE ${ABS_SOURCE} ABSOLUTE)
+  endif()
+  list(FIND LATEXMK_SOURCES_BUILD_FROM ${ABS_SOURCE} ALREADY_BUILT)
+  if(NOT "${ALREADY_BUILT}" STREQUAL "-1")
+    message(FATAL_ERROR "UseLatexMk: You are building twice from the same source, which is unsupported!")
   endif()
 
   # Check the existence of the latexmk executable and skip/fail if not present
