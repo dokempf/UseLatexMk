@@ -151,6 +151,7 @@ function(add_latex_document)
   if(NOT "${ALREADY_BUILT}" STREQUAL "-1")
     message(FATAL_ERROR "UseLatexMk: You are building twice from the same source, which is unsupported!")
   endif()
+  set(LATEXMK_SOURCES_BUILD_FROM ${LATEXMK_SOURCES_BUILD_FROM} ${ABS_SOURCE} PARENT_SCOPE)
 
   # Check the existence of the latexmk executable and skip/fail if not present
   if(NOT (LATEXMK_FOUND AND PDFLATEX_COMPILER))
