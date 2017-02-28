@@ -15,3 +15,9 @@ if(SCENARIO_INSTALL)
                      EXCLUDE_FROM_ALL
                      BUILD_ON_INSTALL)
 endif()
+
+if(SCENARIO_DUPLICATE)
+  message("BLA")
+  add_latex_document(SOURCE simple.tex)
+  add_latex_document(SOURCE simple.tex TARGET foo)
+endif()
