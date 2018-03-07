@@ -42,7 +42,7 @@
 # BUILD_ON_INSTALL
 #   Set this option, if you want to trigger a build of this document during installation.
 #
-# Furthermore, UseLatexMk defines a CMake target latex_clean which cleans the build tree from
+# Furthermore, UseLatexMk defines a CMake target clean_latex which cleans the build tree from
 # all PDF output and all auxiliary files. Note, that (at least for the Unix Makefiles generator)
 # it is not possible to connect this process with the builtin clean target.
 #
@@ -116,11 +116,11 @@ find_file(LATEXMKRC_TEMPLATE
                 ${CMAKE_SOURCE_DIR}/cmake/modules
           )
 
-# Add the latex_clean target
-if(TARGET latex_clean)
-  message(WARNING "latex_clean target already exists. UseLatexMk attaches clean rules to it!")
+# Add the clean_latex target
+if(TARGET clean_latex)
+  message(WARNING "clean_latex target already exists. UseLatexMk attaches clean rules to it!")
 else()
-  add_custom_target(latex_clean)
+  add_custom_target(clean_latex)
 endif()
 
 set(LATEXMK_SOURCES_BUILD_FROM)
@@ -241,11 +241,11 @@ function(add_latex_document)
     install(FILES ${OUTPUT_PDF} DESTINATION ${LMK_INSTALL})
   endif()
 
-  # Add a clean up rule to the latex_clean target
+  # Add a clean up rule to the clean_latex target
   add_custom_target(${LMK_TARGET}_clean
                     COMMAND ${LATEXMK_EXECUTABLE} -C ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Cleaning build results from target ${LMK_TARGET}"
                     )
-  add_dependencies(latex_clean ${LMK_TARGET}_clean)
+  add_dependencies(clean_latex ${LMK_TARGET}_clean)
 endfunction()

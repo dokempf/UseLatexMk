@@ -14,7 +14,7 @@ some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
 * Additional (sophisticated) build logic can be provided to latexmkrc
   through configuration files without touching the CMake code. Note,
   you need to do this to build non-PDF documents.
-* A target `latex_clean` to clean the build directory from all latex output
+* A target `clean_latex` to clean the build directory from all latex output
   and auxiliary latex files is available.
 
 **Please note the following two restrictions**:
@@ -33,7 +33,7 @@ experience incompatibilities with other parts of UseLatexMk, such as installatio
 You just need to
 * copy all the CMake modules (`*.cmake`) from this project into your project
 * Include them with `include(UseLatexMk)`. This is best done from the top-level
-  directory of your project, to make the `latex_clean` target available on that level.
+  directory of your project, to make the `clean_latex` target available on that level.
 
 Now, you are ready to use it!
 
@@ -42,7 +42,7 @@ Now, you are ready to use it!
 Just use the following CMake function `add_latex_document` from anywhere in your project.
 For an explanation of parameters, check `UseLatexMk.cmake`.
 
-To clean the build directory from all latex files, use the target `latex_clean`.
+To clean the build directory from all latex files, use the target `clean_latex`.
 
 # License
 
