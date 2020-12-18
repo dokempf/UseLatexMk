@@ -17,7 +17,7 @@ some advantages of using UseLatexMk.cmake over using UseLATEX.cmake:
 * A target `clean_latex` to clean the build directory from all latex output
   and auxiliary latex files is available.
 
-**Please note the following two restrictions**:
+**Please note the following restrictions**:
 
 UseLatexMk relies on latexmk separating input and output directory correctly.
 This includes using an absolute path for the output directory. On some TeX
@@ -27,6 +27,14 @@ See UseLatexMk.cmake for additional information on the matter.
 UseLatexMk is mainly designed to build PDF documents. You may enable building
 other types of documents by providing a custom latexmkrc template, but you may
 experience incompatibilities with other parts of UseLatexMk, such as installation.
+
+The `minted` package is a bit special regarding its placement of auxiliary files.
+In order to use it with `UseLatexMk` you should use the following parameters to
+`\usepackage`:
+
+```
+\usepackage[outputdir=@CMAKE_CURRENT_BINARY_DIR@]{minted}
+```
 
 # What is needed to use UseLatexMk from my project?
 
