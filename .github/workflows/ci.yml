@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-    - name: Checking out the cookie cutter repository
+    - name: Checking out the UseLatexMk repository
       uses: actions/checkout@v2
 
     - name: Run test suite
       run: |
-        ./test/testdriver.sh ${{runner.workspace}}
+        ./test/testdriver.sh ${{runner.workspace}}/UseLatexMk
