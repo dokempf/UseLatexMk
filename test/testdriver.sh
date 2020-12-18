@@ -56,10 +56,10 @@ pushd duplicate
 failure cmake -DSCENARIO_DUPLICATE=1 $SRC
 popd
 
-# Scenario 4: Building a Minted document
-rm -rf minted
-mkdir minted
-pushd minted
-success cmake -DSCENARIO_MINTED=1 $SRC
+# Scenario 6: Using a resource with relative path
+rm -rf nested
+mkdir nested
+pushd nested
+success cmake -DSCENARIO_NESTED=1 $SRC
 success make install
 popd

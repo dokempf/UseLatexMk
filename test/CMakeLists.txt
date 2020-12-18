@@ -21,6 +21,6 @@ if(SCENARIO_DUPLICATE)
   add_latex_document(SOURCE simple.tex TARGET foo)
 endif()
 
-if(SCENARIO_MINTED)
-  add_latex_document(SOURCE minted.tex)
+if(SCENARIO_NESTED)
+  add_latex_document(SOURCE withinclude.tex)
 endif()
