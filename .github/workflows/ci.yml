@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Testing UseLatexMk
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checking out the cookie cutter repository
+      uses: actions/checkout@v2
+
+    - name: Run test suite
+      run: |
+        ./test/testdriver.sh ${{runner.workspace}}
