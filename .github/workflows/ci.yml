@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Testing UseLatexMk
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checking out the UseLatexMk repository
+      uses: actions/checkout@v2
+
+    - name: Run test suite
+      run: |
+        ./test/testdriver.sh ${{runner.workspace}}/UseLatexMk
