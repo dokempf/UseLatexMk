@@ -17,7 +17,10 @@ if(SCENARIO_INSTALL)
 endif()
 
 if(SCENARIO_DUPLICATE)
-  message("BLA")
   add_latex_document(SOURCE simple.tex)
   add_latex_document(SOURCE simple.tex TARGET foo)
+endif()
+
+if(SCENARIO_MINTED)
+  add_latex_document(SOURCE minted.tex)
 endif()
