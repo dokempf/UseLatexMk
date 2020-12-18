@@ -55,11 +55,3 @@ mkdir duplicate
 pushd duplicate
 failure cmake -DSCENARIO_DUPLICATE=1 $SRC
 popd
-
-# Scenario 4: Building a Minted document
-rm -rf minted
-mkdir minted
-pushd minted
-success cmake -DSCENARIO_MINTED=1 $SRC
-success make install
-popd

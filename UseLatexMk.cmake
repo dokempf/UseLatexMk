@@ -215,17 +215,14 @@ function(add_latex_document)
     set(ENV_COMMAND ${CMAKE_COMMAND} -E env openout_any="a")
   endif()
 
-  # Get an absolute path to the source
-  get_filename_component(LMK_SOURCE_ABS "${LMK_SOURCE}" ABSOLUTE BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
   # Call the latexmk executable
   # NB: Using add_custom_target here results in the target always being outofdate.
   #     This offloads the dependency tracking from cmake to latexmk. This is an
   #     intentional decision of UseLatexMk to avoid listing dependencies of the tex source.
   add_custom_target(${LMK_TARGET}
                     ${ALL_OPTION}
-                    COMMAND ${ENV_COMMAND} ${LATEXMK_EXECUTABLE} ${LATEXMKRC_OPTIONS} ${LMK_SOURCE_ABS}
-                    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+                    COMMAND ${ENV_COMMAND} ${LATEXMK_EXECUTABLE} ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
+                    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Building PDF from ${LMK_SOURCE}..."
                     ${BYPRODUCTS_PARAMETER}
                     )
@@ -250,8 +247,8 @@ function(add_latex_document)
 
   # Add a clean up rule to the clean_latex target
   add_custom_target(${LMK_TARGET}_clean
-                    COMMAND ${ENV_COMMAND} ${LATEXMK_EXECUTABLE} -C ${LATEXMKRC_OPTIONS}  ${LMK_SOURCE_ABS}
-                    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+                    COMMAND ${ENV_COMMAND} ${LATEXMK_EXECUTABLE} -C ${LATEXMKRC_OPTIONS} ${LMK_SOURCE}
+                    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                     COMMENT "Cleaning build results from target ${LMK_TARGET}"
                     )
   add_dependencies(clean_latex ${LMK_TARGET}_clean)
