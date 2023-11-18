@@ -12,11 +12,11 @@ on:
 jobs:
   test:
     name: Testing UseLatexMk
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checking out the UseLatexMk repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Run test suite
       run: |
