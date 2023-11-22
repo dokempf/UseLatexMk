@@ -42,7 +42,7 @@ You just need to
 * copy all the CMake modules (`*.cmake`) from this project into your project
 * Include them with `include(UseLatexMk)`. This is best done from the top-level
   directory of your project, to make the `clean_latex` target available on that level.
-* Use CMake 3.5 or newer.
+* Use CMake 3.10 or newer.
 
 Now, you are ready to use it!
 

@@ -103,6 +103,11 @@
 #
 include_guard(GLOBAL)
 
+# ensure CMake version is recent enough
+if(CMAKE_VERSION VERSION_LESS 3.10)
+  message(FATAL_ERROR "UseLatexMk.cmake requires CMake 3.10 or newer")
+endif()
+
 # Find LATEX and LatexMk
 find_package(LATEX)
 find_package(LatexMk)
