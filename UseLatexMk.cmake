@@ -203,11 +203,8 @@ function(add_latex_document)
     set(LATEXMKRC_OPTIONS ${LATEXMKRC_OPTIONS} -r ${LATEXMKRC_FILE})
   endforeach()
 
-  # Add the BYPRODUCTS parameter, if the CMake version supports it
-  set(BYPRODUCTS_PARAMETER "")
-  if (CMAKE_VERSION VERSION_GREATER "3.2")
-    set(BYPRODUCTS_PARAMETER BYPRODUCTS ${OUTPUT_PDF})
-  endif()
+  # Add the BYPRODUCTS parameter
+  set(BYPRODUCTS_PARAMETER BYPRODUCTS ${OUTPUT_PDF})
 
   # Maybe allow latexmk the use of absolute paths
   set(ENV_COMMAND "")
