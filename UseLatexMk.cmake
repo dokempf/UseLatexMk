@@ -66,10 +66,10 @@
 # system environment variable openout_any to "a" (as in "all"), to override the default "paranoid"
 # setting.
 #
-# UseLatexMk.cmake allows to reenable the TeX security measure by setting LATEXMK_PARANOID to TRUE
+# UseLatexMk.cmake allows to re-enable the TeX security measure by setting LATEXMK_PARANOID to TRUE
 # through cmake -D, but it is not guaranteed to work correctly in that case.
 #
-# For further informations, visit https://github.com/dokempf/UseLatexMk
+# For further information, visit https://github.com/dokempf/UseLatexMk
 #
 #
 # Copyright (c) 2017, Dominic Kempf, Steffen Müthing
@@ -101,6 +101,12 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+include_guard(GLOBAL)
+
+# ensure CMake version is recent enough
+if(CMAKE_VERSION VERSION_LESS 3.10)
+  message(FATAL_ERROR "UseLatexMk.cmake requires CMake 3.10 or newer")
+endif()
 
 # Find LATEX and LatexMk
 find_package(LATEX)
@@ -111,9 +117,9 @@ find_file(LATEXMKRC_TEMPLATE
           latexmkrc.cmake
           HINTS ${CMAKE_MODULE_PATH}
                 ${CMAKE_CURRENT_SOURCE_DIR}
-                ${CMAKE_SOURCE_DIR}
-                ${CMAKE_SOURCE_DIR}/cmake
-                ${CMAKE_SOURCE_DIR}/cmake/modules
+                ${PROJECT_SOURCE_DIR}
+                ${PROJECT_SOURCE_DIR}/cmake
+                ${PROJECT_SOURCE_DIR}/cmake/modules
           NO_CMAKE_FIND_ROOT_PATH
           )
 
@@ -131,7 +137,6 @@ function(add_latex_document)
   set(OPTION REQUIRED EXCLUDE_FROM_ALL BUILD_ON_INSTALL)
   set(SINGLE SOURCE TARGET INSTALL)
   set(MULTI FATHER_TARGET RCFILE)
-  include(CMakeParseArguments)
   cmake_parse_arguments(LMK "${OPTION}" "${SINGLE}" "${MULTI}" ${ARGN})
 
   if(LMK_UNPARSED_ARGUMENTS)
@@ -145,7 +150,7 @@ function(add_latex_document)
   if(NOT LMK_TARGET)
     # Construct a nice target name from the source file
     get_filename_component(LMK_TARGET ${LMK_SOURCE} ABSOLUTE)
-    file(RELATIVE_PATH LMK_TARGET ${CMAKE_SOURCE_DIR} ${LMK_TARGET})
+    file(RELATIVE_PATH LMK_TARGET ${PROJECT_SOURCE_DIR} ${LMK_TARGET})
     string(REPLACE "/" "_" LMK_TARGET ${LMK_TARGET})
     string(REPLACE "." "_" LMK_TARGET ${LMK_TARGET})
   endif()
