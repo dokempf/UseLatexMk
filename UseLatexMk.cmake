@@ -181,10 +181,6 @@ function(add_latex_document)
     endif()
   endif()
 
-  # Determine the output name
-  get_filename_component(output ${LMK_SOURCE} NAME_WE)
-  set(OUTPUT_PDF ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
-
   # Inspect the EXCLUDE_FROM_ALL option
   if(LMK_EXCLUDE_FROM_ALL)
     set(ALL_OPTION "")
@@ -227,6 +223,10 @@ function(add_latex_document)
     set(LMK_SOURCE_REPLACED "${CMAKE_CURRENT_BINARY_DIR}/${source_filename}_source${source_extension}")
   endif()
   configure_file(${LMK_SOURCE} ${LMK_SOURCE_REPLACED} @ONLY)
+
+  # Determine the output name
+  get_filename_component(output ${LMK_SOURCE_REPLACED} NAME_WE)
+  set(OUTPUT_PDF ${CMAKE_CURRENT_BINARY_DIR}/${output}.pdf)
 
   # Call the latexmk executable
   # NB: Using add_custom_target here results in the target always being outofdate.
